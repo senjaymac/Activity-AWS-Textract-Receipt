@@ -1,5 +1,6 @@
 package com.srllc.amazon_textract.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,14 +35,14 @@ public class Receipt {
     @Column(name = "cashier_number")
     private String cashierNumber = "1";
     
-    @Column(name = "subtotal")
-    private BigDecimal subtotal = new BigDecimal("107.60");
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
     @Column(name = "cash")
-    private BigDecimal cash = new BigDecimal("200.00");
+    private BigDecimal cash;
 
     @Column(name = "change_amount")
-    private BigDecimal changeAmount = new BigDecimal("92.40");
+    private BigDecimal changeAmount;
     
     @Column(name = "receipt_date")
     private LocalDateTime receiptDate;
@@ -50,6 +51,7 @@ public class Receipt {
     private LocalDateTime createdAt;
     
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ReceiptItem> items;
     
     @PrePersist

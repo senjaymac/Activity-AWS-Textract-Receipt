@@ -1,5 +1,6 @@
 package com.srllc.amazon_textract.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,5 +32,6 @@ public class ReceiptItem {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id")
+    @JsonBackReference
     private Receipt receipt;
 }

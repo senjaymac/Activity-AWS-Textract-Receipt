@@ -61,7 +61,7 @@ public class TextractServiceImpl implements TextractService {
                         item.getPrice()))
                     .toList(),
                 new ExtractTextResponse.TransactionInfo(
-                    receipt.getSubtotal(),
+                    receipt.getTotalAmount(),
                     receipt.getCash(),
                     receipt.getChangeAmount()
                 )
@@ -78,7 +78,7 @@ public class TextractServiceImpl implements TextractService {
         String branch = extractBranch(lines);
         String managerName = extractManagerName(lines);
         String cashierNumber = extractCashierNumber(lines);
-        BigDecimal subtotal = extractSubtotal(lines);
+        BigDecimal totalAmount = extractSubtotal(lines);
         BigDecimal cash = extractCash(lines);
         BigDecimal changeAmount = extractChangeAmount(lines);
         List<ReceiptItem> items = extractItems(lines);
@@ -88,7 +88,7 @@ public class TextractServiceImpl implements TextractService {
                 .branch(branch)
                 .managerName(managerName)
                 .cashierNumber(cashierNumber)
-                .subtotal(subtotal)
+                .totalAmount(totalAmount)
                 .cash(cash)
                 .changeAmount(changeAmount)
                 .receiptDate(LocalDateTime.now())

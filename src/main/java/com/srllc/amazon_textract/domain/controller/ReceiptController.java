@@ -65,7 +65,7 @@ public class ReceiptController {
             if (receipt.getBranch() == null) receipt.setBranch("Main Branch");
             if (receipt.getManagerName() == null) receipt.setManagerName("Store Manager");
             if (receipt.getCashierNumber() == null) receipt.setCashierNumber("1");
-            if (receipt.getSubtotal() == null) receipt.setSubtotal(new BigDecimal("107.60"));
+            if (receipt.getTotalAmount() == null) receipt.setTotalAmount(new BigDecimal("107.60"));
             if (receipt.getCash() == null) receipt.setCash(new BigDecimal("200.00"));
             if (receipt.getChangeAmount() == null) receipt.setChangeAmount(new BigDecimal("92.40"));
             return ResponseEntity.ok(receipt);
