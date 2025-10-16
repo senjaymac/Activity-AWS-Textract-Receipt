@@ -108,11 +108,34 @@ public class TextractServiceImpl implements TextractService {
     }
 
     private String extractMerchantName(List<String> lines) {
+        // Common store keywords
+        String[] storeKeywords = {"HYPERMARKET", "STORE", "MART", "SUPERMARKET", "MARKET", "SHOP", "OUTLET", 
+                                 "CENTER", "CENTRE", "PLAZA", "MALL", "GROCERY", "FOOD", "RETAIL", "CHAIN",
+                                 "CO", "LTD", "INC", "CORP", "COMPANY", "ENTERPRISE", "TRADING", "SDN BHD"};
+        
+        // First, look for lines with store keywords
         for (String line : lines) {
-            if (line.toUpperCase().contains("HYPERMARKET") || line.toUpperCase().contains("STORE") || line.toUpperCase().contains("MART")) {
-                return line.trim();
+            String upperLine = line.toUpperCase();
+            for (String keyword : storeKeywords) {
+                if (upperLine.contains(keyword)) {
+                    return line.trim();
+                }
             }
         }
+        
+        // Second, look for lines that are likely store names (first few non-empty lines)
+        for (int i = 0; i < Math.min(5, lines.size()); i++) {
+            String line = lines.get(i).trim();
+            if (!line.isEmpty() && 
+                !line.matches(".*\\d{2}/\\d{2}/\\d{4}.*") && // Not a date
+                !line.matches(".*\\d{2}:\\d{2}.*") && // Not a time
+                !line.toLowerCase().contains("receipt") &&
+                !line.toLowerCase().contains("invoice") &&
+                line.length() > 2) {
+                return line;
+            }
+        }
+        
         return lines.isEmpty() ? "Unknown Store" : lines.get(0);
     }
 
@@ -244,23 +267,5 @@ public class TextractServiceImpl implements TextractService {
         return BigDecimal.ZERO;
     }
 
-    private String extractField(List<String> lines, Pattern pattern) {
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                return matcher.group(1).trim();
-            }
-        }
-        return null;
-    }
 
-    private BigDecimal extractAmount(List<String> lines, Pattern pattern) {
-        for (String line : lines) {
-            Matcher matcher = pattern.matcher(line);
-            if (matcher.find()) {
-                return new BigDecimal(matcher.group(1));
-            }
-        }
-        return BigDecimal.ZERO;
-    }
 }
