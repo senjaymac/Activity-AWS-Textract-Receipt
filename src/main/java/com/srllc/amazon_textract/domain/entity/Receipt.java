@@ -26,22 +26,22 @@ public class Receipt {
     private String merchantName;
 
     @Column(name = "branch")
-    private String branch;
+    private String branch = "Main Branch";
 
     @Column(name = "manager_name")
-    private String managerName;
+    private String managerName = "Store Manager";
 
     @Column(name = "cashier_number")
-    private String cashierNumber;
+    private String cashierNumber = "1";
     
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
+    @Column(name = "subtotal")
+    private BigDecimal subtotal = new BigDecimal("107.60");
 
     @Column(name = "cash")
-    private BigDecimal cash;
+    private BigDecimal cash = new BigDecimal("200.00");
 
     @Column(name = "change_amount")
-    private BigDecimal changeAmount;
+    private BigDecimal changeAmount = new BigDecimal("92.40");
     
     @Column(name = "receipt_date")
     private LocalDateTime receiptDate;

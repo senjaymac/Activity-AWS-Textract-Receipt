@@ -7,8 +7,7 @@ import java.util.List;
 public record ExtractTextResponse(
     StoreInfo store,
     List<ItemInfo> items,
-    TransactionInfo transaction,
-    List<String> rawText
+    TransactionInfo transaction
 ) {
     public record StoreInfo(
         String name,
