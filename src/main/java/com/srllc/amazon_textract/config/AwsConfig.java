@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.textract.TextractClient;
+import software.amazon.awssdk.services.rekognition.RekognitionClient;
 
 @Configuration
 public class AwsConfig {
@@ -23,6 +24,15 @@ public class AwsConfig {
     @Bean
     public TextractClient textractClient() {
         return TextractClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)))
+                .build();
+    }
+
+    @Bean
+    public RekognitionClient rekognitionClient() {
+        return RekognitionClient.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)))

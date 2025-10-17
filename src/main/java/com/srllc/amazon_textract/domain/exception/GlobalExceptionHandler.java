@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import software.amazon.awssdk.services.rekognition.model.RekognitionException;
 
 import java.time.LocalDateTime;
 
@@ -44,6 +45,17 @@ public class GlobalExceptionHandler {
             LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(RekognitionException.class)
+    public ResponseEntity<ErrorResponse> handleRekognitionException(RekognitionException ex) {
+        log.error("AWS Rekognition service error: ", ex);
+        ErrorResponse error = new ErrorResponse(
+            "REKOGNITION_ERROR",
+            "Image analysis failed: " + ex.getMessage(),
+            LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     public record ErrorResponse(

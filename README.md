@@ -1,10 +1,11 @@
-# AWS Textract Receipt Processing Application
+# AWS Textract & Rekognition Application
 
-A Spring Boot application that uses AWS Textract to extract text from receipt images and stores structured data in a MySQL database.
+A Spring Boot application that uses AWS Textract for receipt processing and AWS Rekognition for image content analysis, with structured data storage in MySQL database.
 
 ## Features
 
-- Extract text from receipt images using AWS Textract
+- **Receipt Processing**: Extract and parse receipt data using AWS Textract
+- **Image Analysis**: Identify objects, people, and activities using AWS Rekognition
 - Parse and structure receipt data (merchant name, total amount, items)
 - Store structured data in MySQL database
 - REST API with Swagger UI documentation
@@ -48,10 +49,14 @@ mvn spring-boot:run
 
 ## API Endpoints
 
-### Receipt Processing
+### Receipt Processing (Textract)
 - `POST /api/v1/textract/extract` - Upload receipt image for processing
+- `POST /api/v1/textract/raw-text` - Extract raw text from images
 - `GET /api/v1/receipts` - Get all processed receipts
 - `GET /api/v1/receipts/{id}` - Get specific receipt by ID
+
+### Image Analysis (Rekognition)
+- `POST /api/v1/rekognition/analyze` - Analyze image content and identify objects/people
 
 ### Swagger UI
 Access the API documentation at: `http://localhost:8084/swagger-ui/index.html`
@@ -72,8 +77,9 @@ Access the API documentation at: `http://localhost:8084/swagger-ui/index.html`
 - `quantity` - Item quantity
 - `price` - Item price
 
-## Usage Example
+## Usage Examples
 
+### Receipt Processing
 1. Upload a receipt image via Swagger UI or curl:
 ```bash
 curl -X POST "http://localhost:8084/api/v1/textract/extract" \
@@ -99,11 +105,39 @@ curl -X POST "http://localhost:8084/api/v1/textract/extract" \
 }
 ```
 
+### Image Analysis
+1. Analyze image content:
+```bash
+curl -X POST "http://localhost:8084/api/v1/rekognition/analyze" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@photo.jpg"
+```
+
+2. Response includes detected labels:
+```json
+{
+  "labels": [
+    {
+      "name": "Person",
+      "confidence": 99.8,
+      "categories": ["Person"]
+    },
+    {
+      "name": "Clothing",
+      "confidence": 95.2,
+      "categories": ["Apparel"]
+    }
+  ],
+  "analysisType": "LABEL_DETECTION"
+}
+```
+
 ## Error Handling
 
 The application includes global exception handling for:
 - File upload errors
 - AWS Textract service errors
+- AWS Rekognition service errors
 - Database connection issues
 - Invalid input validation
 

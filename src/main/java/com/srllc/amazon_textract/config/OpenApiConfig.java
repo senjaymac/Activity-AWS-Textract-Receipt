@@ -18,13 +18,18 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Activity: AWS Textract Receipt Extractor with Spring Boot")
+                        .title("AWS Textract & Rekognition API with Spring Boot")
                         .version("1.0")
                         .description("""
-                                API Documentation for Spring boot security of batch 2025
+                                API Documentation for AWS Textract receipt processing and Rekognition image analysis
                                 
-                                **Developer
-                                -Senon Jayson Macatangay
+                                **Features:**
+                                - Receipt text extraction and parsing with AWS Textract
+                                - Image content analysis with AWS Rekognition
+                                - Structured data storage in MySQL database
+                                
+                                **Developer:**
+                                - Senon Jayson Macatangay
                                 
                                 """)
                         .contact(new Contact()
