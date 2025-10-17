@@ -103,6 +103,68 @@ public class RekognitionController {
                 ))
                 .toList();
 
-        return ResponseEntity.ok(new ImageAnalysisResponse(labels, "LABEL_DETECTION"));
+        return ResponseEntity.ok(new ImageAnalysisResponse(labels, List.of(), "LABEL_DETECTION"));
+    }
+
+    @PostMapping(value = "/celebrity", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+        summary = "Recognize celebrities in image",
+        description = "Upload an image to identify celebrities using AWS Rekognition celebrity recognition"
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Celebrity recognition completed",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ImageAnalysisResponse.class),
+                examples = @ExampleObject(
+                    name = "Celebrity Recognition Response",
+                    value = """
+                    {
+                      "labels": [],
+                      "celebrities": [
+                        {
+                          "name": "Celebrity Name",
+                          "confidence": 99.5,
+                          "urls": ["https://www.imdb.com/name/nm0000123"]
+                        }
+                      ],
+                      "analysisType": "CELEBRITY_RECOGNITION"
+                    }
+                    """
+                )
+            )
+        ),
+        @ApiResponse(responseCode = "400", description = "Invalid file format"),
+        @ApiResponse(responseCode = "500", description = "AWS Rekognition service error")
+    })
+    public ResponseEntity<ImageAnalysisResponse> recognizeCelebrities(
+        @Parameter(
+            description = "Image file containing celebrities (JPG, PNG supported)",
+            required = true
+        )
+        @RequestPart("file") MultipartFile file
+    ) throws IOException {
+        
+        byte[] imageBytes = file.getBytes();
+        
+        var request = RecognizeCelebritiesRequest.builder()
+                .image(Image.builder()
+                        .bytes(SdkBytes.fromByteArray(imageBytes))
+                        .build())
+                .build();
+
+        var response = rekognitionClient.recognizeCelebrities(request);
+
+        List<ImageAnalysisResponse.DetectedCelebrity> celebrities = response.celebrityFaces().stream()
+                .map(celebrity -> new ImageAnalysisResponse.DetectedCelebrity(
+                        celebrity.name(),
+                        celebrity.matchConfidence(),
+                        celebrity.urls()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(new ImageAnalysisResponse(List.of(), celebrities, "CELEBRITY_RECOGNITION"));
     }
 }

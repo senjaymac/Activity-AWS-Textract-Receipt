@@ -57,6 +57,7 @@ mvn spring-boot:run
 
 ### Image Analysis (Rekognition)
 - `POST /api/v1/rekognition/analyze` - Analyze image content and identify objects/people
+- `POST /api/v1/rekognition/celebrity` - Recognize celebrities in images
 
 ### Swagger UI
 Access the API documentation at: `http://localhost:8084/swagger-ui/index.html`
